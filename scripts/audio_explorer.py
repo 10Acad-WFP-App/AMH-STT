@@ -7,7 +7,7 @@ from glob import glob
 from json import dump
 
 from scipy.ndimage.measurements import label
-from logger_creator import CreateLogger
+
 
 
 try:

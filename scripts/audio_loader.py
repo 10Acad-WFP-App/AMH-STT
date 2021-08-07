@@ -29,7 +29,7 @@ class AudioLoader(AudioExplorer):
         # but first we need to change the load
 
     def load_audio(self):
-
+        
         try:
             audio_name = []
             audio_mode = []
@@ -38,15 +38,14 @@ class AudioLoader(AudioExplorer):
             audio_duration = []
             has_TTS = []
             tts = []
-
-            for audio_file in self.audio_files:
+            
+            for audio_file in self.audio_files_dir_list:
                 audio_data, audio_freq = lb.load(audio_file,sr=None)
-                # Audio_Name
                 name = audio_file.split('wav')[-2]
                 name = name[1:-1].strip()
                 audio_name.append(name)
                 # Time in seconds
-                audio_duration.append(round(lb.get_duration(audio_data),3))
+                audio_duration.append(round(lb.get_duration(audio_data,sr=16000),3))
                 # Audio Sampling Rate
                 audio_frequency.append(audio_freq)
                 # Audio Mode (Mono, Stereo)
