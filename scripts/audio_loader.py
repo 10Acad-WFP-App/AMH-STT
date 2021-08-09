@@ -3,6 +3,7 @@ import os
 import librosa as lb
 from librosa.core import audio
 import pandas as pd
+from json import dump
 try:
     from audio_explorer import AudioExplorer
 except:
@@ -19,15 +20,16 @@ e_logger = e_logger.get_default_logger()
 
 class AudioLoader(AudioExplorer):
     def __init__(self, directory:str, audio_dir:str=r'/wav/*.wav', tts_file:str=r'/trsTrain.txt'):
+        self.label_target = {}
         try:
             super().__init__(directory,audio_dir,tts_file)
             e_logger.info('Successfully Inherited AudioExplorer Class')
         except Exception as e:
             e_logger.exception("Failed Inheriting")
-
+        self.load_label_target()
         # so now we want to load the audio and transcription
         # but first we need to change the load
-
+                
     def load_audio(self):
         
         try:
@@ -73,6 +75,35 @@ class AudioLoader(AudioExplorer):
         except Exception as e:
             e_logger.exception('Failed to Load Audio Files')
 
+    def load_label_target(self):
+        for audio_file in self.audio_files_dir_list:
+            name = audio_file.split('wav')[-2]
+            name = name[1:-1].strip()
+            tts_status = self.check_tts_exist(name)
+                # Add Transliteration
+            if(tts_status):
+                self.label_target[name] = self.tts_dict[name]
+
+    def export_tts(self, directory: str) -> None:
+        #export to valid and train json files
+        partition_index =len(self.label_target)*0.8
+        train_dict = {key: self.label_target[key] for i,key in zip(range(1000),self.label_target.keys()) if i < partition_index}
+        valid_dict = {key: self.label_target[key] for i,key in zip(range(1000),self.label_target.keys()) if i >= partition_index}
+        try:
+            with open(os.path.join(directory,"train.json"), "w") as export_file:
+                dump(train_dict, export_file, indent=4, sort_keys=True)
+            with open(os.path.join(directory,"valid.json"), "w") as export_file:
+                dump(valid_dict, export_file, indent=4, sort_keys=True)
+
+            e_logger.info(
+                f'Successfully Exported Transliteration as JSON file to {directory}" train.json and test.json".')
+
+        except FileExistsError as e:
+            e_logger.exception(
+                f'Failed to create {directory} train or test.json, it already exists.')
+        except Exception as e:
+            e_logger.exception('Failed to Export Transliteration as JSON File.')
+
     def get_audio_info(self) -> pd.DataFrame:
         try:
             return self.df.drop(columns=['TTS','TimeSeriesData'],axis=1)
@@ -91,6 +122,6 @@ class AudioLoader(AudioExplorer):
         except Exception as e:
             e_logger.exception('Failed to return Audio Information')
 
-# if __name__ == "__main__":
-#     al = AudioLoader(directory='data/train')
-#     print(al.get_audio_info().head(3))
+if __name__ == "__main__":
+    al = AudioLoader(directory='data/train')
+    print(al.export_tts("./"))
