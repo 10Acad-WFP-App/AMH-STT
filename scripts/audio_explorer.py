@@ -5,6 +5,7 @@ import librosa as lb
 import librosa.display as lbdisp
 from glob import glob
 from json import dump
+import random
 
 from scipy.ndimage.measurements import label
 
@@ -31,6 +32,7 @@ class AudioExplorer:
             self.tts_file = self.main_dir + tts_file
             logger.info('Successfully Created AudioExplorer Class')
             self.load()
+
             logger.info('Successfully Loaded Audio and TTS files')
 
         except Exception as e:
@@ -61,17 +63,17 @@ class AudioExplorer:
         except Exception as e:
             logger.exception('Failed to return Transliteration')
 
-    def export_tts(self, file_name: str) -> None:
+    def export_tts(self, filename: str) -> None:
         try:
-            with open(file_name, "w") as export_file:
-                dump(self.tts_dict, export_file, indent=4, sort_keys=True)
+            with open(filename, "w") as export_file:
+                dump(filename, export_file, indent=4, sort_keys=True)
 
             logger.info(
-                f'Successfully Exported Transliteration as JSON file to {file_name}.')
+                f'Successfully Exported Transliteration as JSON file to {filename}.')
 
         except FileExistsError as e:
             logger.exception(
-                f'Failed to create {file_name}, it already exists.')
+                f'Failed to create {filename}, it already exists.')
         except Exception as e:
             logger.exception('Failed to Export Transliteration as JSON File.')
 
@@ -86,7 +88,8 @@ class AudioExplorer:
             return self.tts_file[file_name]
         else:
             return 'Unknown'
-
+            
+            
     def load_audio(self) -> None:
 
         try:
@@ -319,7 +322,7 @@ class AudioExplorer:
             logger.exception('Failed to Visualize Chroma of Audio File')
 
 
-if __name__ == "__main__":
-    ae = AudioExplorer(directory='../data/train')
-    print(ae.get_tts())
-    print(ae.get_audio_info())
+# if __name__ == "__main__":
+    # ae = AudioExplorer(directory='data/train')
+    # print(ae.export_tts("./"))
+    # print(ae.get_audio_info())
