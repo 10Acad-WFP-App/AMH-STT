@@ -266,7 +266,7 @@ class AudioGenerator():
         return len(self.valid_texts)
 
 
-def shuffle_data(audio_paths, durations, texts):
+def shuffle_data(audio_paths,  texts):
     """ Shuffle the data (called after making a complete pass through 
         training or validation data during the training process)
     Params:
@@ -276,9 +276,9 @@ def shuffle_data(audio_paths, durations, texts):
     """
     p = np.random.permutation(len(audio_paths))
     audio_paths = [audio_paths[i] for i in p] 
-    durations = [durations[i] for i in p] 
+    # durations = [durations[i] for i in p] 
     texts = [texts[i] for i in p]
-    return audio_paths, durations, texts
+    return audio_paths, texts
 
 def sort_data(audio_paths, durations, texts):
     """ Sort the data by duration 
