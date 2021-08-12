@@ -7,7 +7,6 @@ from glob import glob
 from json import dump
 
 from scipy.ndimage.measurements import label
-from logger_creator import CreateLogger
 
 
 try:
@@ -23,7 +22,6 @@ class AudioExplorer:
     def __init__(self, directory: str, audio_dir: str = r'/wav/*.wav', tts_file: str = r'/trsTrain.txt') -> None:
         try:
             self.tts_dict = {}
-            self.df = None
             self.audio_files = []
             self.audio_freq = []
             self.main_dir = directory
@@ -63,8 +61,9 @@ class AudioExplorer:
 
     def export_tts(self, file_name: str) -> None:
         try:
-            with open(file_name, "w") as export_file:
-                dump(self.tts_dict, export_file, indent=4, sort_keys=True)
+            with open(file_name, "w", encoding='UTF-8') as export_file:
+                dump(self.tts_dict, export_file, indent=4,
+                     sort_keys=True, ensure_ascii=False)
 
             logger.info(
                 f'Successfully Exported Transliteration as JSON file to {file_name}.')
@@ -92,10 +91,6 @@ class AudioExplorer:
         try:
             audio_name = []
             audio_mode = []
-            audio_amplitude_min = []
-            audio_amplitude_max = []
-            audio_amplitude_mean = []
-            audio_amplitude_median = []
             audio_frequency = []
             audio_duration = []
             audio_zero_crossing = []
@@ -115,21 +110,17 @@ class AudioExplorer:
                 audio_name.append(name)
                 # Audio Mode (Mono, Stereo)
                 audio_mode.append(
-                    'Mono' if audio_data.shape == 1 else 'Stereo')
+                    'Mono' if len(audio_data.shape) == 1 else 'Stereo')
                 # Time in seconds
-                audio_duration.append(round(lb.get_duration(audio_data), 3))
+                audio_duration.append(
+                    round(lb.get_duration(audio_data, sr=audio_freq), 3))
                 # Zero Crossing
                 zero_crossings = lb.zero_crossings(audio_data, pad=False)
                 audio_zero_crossing.append(sum(zero_crossings))
                 # Minimum Audio Amplitude
-                audio_amplitude_min.append(round(min(audio_data), 3))
+               
                 # Maximum Audio Amplitude
-                audio_amplitude_max.append(round(max(audio_data), 3))
-                # Mean Audio Amplitude
-                audio_amplitude_mean.append(round(np.mean(audio_data), 3))
-                # Median Audio Amplitude
-                audio_amplitude_median.append(round(np.median(audio_data), 3))
-                # Audio Frequency
+              
                 audio_frequency.append(audio_freq)
                 # TTS
                 tts_status = self.check_tts_exist(name)
@@ -146,10 +137,7 @@ class AudioExplorer:
             self.df['Duration(sec)'] = audio_duration
             self.df['Frequency(Hz)'] = audio_frequency
             self.df['ZeroCrossings'] = audio_zero_crossing
-            self.df['MinAmplitude'] = audio_amplitude_min
-            self.df['MaxAmplitude'] = audio_amplitude_max
-            self.df['AmplitudeMean'] = audio_amplitude_mean
-            self.df['AmplitudeMedian'] = audio_amplitude_median
+           
             self.df['HasTTS'] = has_TTS
             self.df['TTS'] = tts
 
@@ -158,7 +146,7 @@ class AudioExplorer:
 
     def get_audio_info(self) -> pd.DataFrame:
         try:
-            return self.df.drop('TTS', axis=1)
+            return self.df
         except Exception as e:
             logger.exception('Failed to return Audio Information')
 
@@ -321,5 +309,5 @@ class AudioExplorer:
 
 if __name__ == "__main__":
     ae = AudioExplorer(directory='../data/train')
-    print(ae.get_tts())
-    print(ae.get_audio_info())
+    #ae.export_tts('../data/labels.json')
+    
