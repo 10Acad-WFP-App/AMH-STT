@@ -26,10 +26,4 @@ def write():
         st.bar_chart(y)
     elif data== 'Audio_duration ':
       
-        y=train_info_df.groupby(bins)['Duration(sec)'].agg(['count', 'sum']).sort_values(by='count', ascending=False).plot(kind='bar', width=0.85, title='Audio Count and Duration Sum Diagram',
-                                                                  ylabel='Value', figsize=(20, 6))
-        for p in y.patches:
-            y.annotate('{:.0f}'.format(p.get_height()), (p.get_x()
-                                                   * 1.005, p.get_height() * 1.005), fontweight='bold')
-
-        st.pyplot()
+        train_audio_explorer.get_audio_visualization(966)

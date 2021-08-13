@@ -93,8 +93,8 @@ def write():
         if st.button('Transcribe'):
             st.write("")
             with st.spinner('wait for it ...'):
-                
                 time.sleep(60)
+            st.success('Done!')    
         else:
             st.write('')    
         
