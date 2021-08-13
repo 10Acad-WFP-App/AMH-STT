@@ -1,0 +1,15 @@
+artifact_uri: file:///home/eyerusalem/Documents/AMH-STT/notebooks/mlruns/0/0bcc6939cafc47c1b78e01f58c0d8cf7/artifacts
+end_time: 1628874382771
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+name: ''
+run_id: 0bcc6939cafc47c1b78e01f58c0d8cf7
+run_uuid: 0bcc6939cafc47c1b78e01f58c0d8cf7
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1628874233176
+status: 4
+tags: []
+user_id: eyerusalem
