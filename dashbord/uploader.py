@@ -90,6 +90,13 @@ def write():
         st.success("Processing File..")     
         
         st.header("Transcribe audio")
+        if st.button('Transcribe'):
+            st.write("")
+            with st.spinner('wait for it ...'):
+                
+                time.sleep(60)
+        else:
+            st.write('')    
         
        
         
