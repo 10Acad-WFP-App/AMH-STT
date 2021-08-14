@@ -96,9 +96,6 @@ class ModelInference:
     def get_prediction(self):
         try:
             return self.pred_statement
-            logger.info(
-                    'Successfully Returned Predictions.')
-
         except Exception as e:
             logger.exception(
                 'Failed to Return Predictions.')
