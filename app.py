@@ -1,25 +1,10 @@
 from os import write
 import sys
-from sklearn import model_selection  
 sys.path.insert(0, './scripts')
 from model_inference import ModelInference
 import streamlit as st
-import numpy as np
-import pandas as pd
-import json
+import scipy.io.wavfile as wav
 
-# import modeling
-# import visualize
-import pickle
-import librosa
-# import tensorflow as tf
-# from tensorflow.keras.models import load_model
-# from six.moves import xrange as range
-# import json
-# from python_speech_features import mfcc
-
-
-# import glob
 
 
 def file_uploader():
@@ -30,23 +15,24 @@ def file_uploader():
 # defining the function which will make 
 # the prediction using data about the users 
 def prediction(file):   
-    y,sr = librosa.load(file)
-    mi = ModelInference(y,sr)
+    sr,y = wav.read(file)
+    mi = ModelInference(y)
     result = mi.get_prediction()
     return result
 
     
 def main_page():
-    st.write('Amharic Speech to Text')
-    Store = st.write("Upload your audio file")
+    st.markdown('<h2>Amharic Speech To Text</h2>', unsafe_allow_html=True)
+    st.write("Upload your audio file")
     file = file_uploader()
 
     result = ""
     
       
     # when 'Predict' is clicked, make the prediction and store it 
-    if st.button("Predict"): 
+    if st.button("Transcribe"): 
         result = prediction(file)
+        st.audio(file, format='audio/wav')
         st.write(result)
         # st.success('The user is {}'.format(result))     
   
