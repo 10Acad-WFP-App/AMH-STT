@@ -4,7 +4,7 @@ from logging import log
 import numpy as np
 from json import load
 from python_speech_features import mfcc, logfbank
-# from model_trainer import CTCLossLayer
+from model_trainer import CTCLossLayer
 import tensorflow as tf
 
 try:
@@ -17,10 +17,11 @@ logger = CreateLogger('ModelInference', handlers=1)
 logger = logger.get_default_logger()
 
 class ModelInference:
-    def __init__(self,audio,alphabets_path = 'data/alphabets_data.json',model_path = 'models/stacked-lstm_predict.h5'):
+    def __init__(self,audio,alphabets_path = 'data/alphabets_data.json',model_pred_path = 'models/stacked-lstm_predict.h5',model_train_path = 'models/stacked-lstm_train.h5'):
         try:
             self.alphabets_path = alphabets_path
-            self.model_path = model_path
+            self.model_train_path = model_train_path
+            self.model_pred_path = model_pred_path
             self.FEAT_MASK_VALUE = 1e+10
             self.infer(audio)
             logger.info('Successfully Initialized ModelInference.')
@@ -41,7 +42,9 @@ class ModelInference:
             logger.exception('Failed to Load alphabets data.')
         
         try:
-            self.model_pred = tf.keras.models.load_model(self.model_path)
+            model_train = tf.keras.models.load_model(self.model_train_path,custom_objects={'CTCLossLayer':CTCLossLayer})
+            self.model_pred = tf.keras.models.load_model(self.model_pred_path)
+            self.model_pred.set_weights(model_train.get_weights())
             logger.info('Successfully Loaded Model for inference.')
         except Exception as e:
             logger.exception('Failed to Load Model for inference.')
