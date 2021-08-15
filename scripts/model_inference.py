@@ -17,7 +17,7 @@ logger = CreateLogger('ModelInference', handlers=1)
 logger = logger.get_default_logger()
 
 class ModelInference:
-    def __init__(self,audio,alphabets_path = 'data/alphabets_data.json',model_pred_path = 'models/stacked-lstm_predict.h5',model_train_path = 'models/stacked-lstm_train.h5'):
+    def __init__(self,audio,alphabets_path = 'data/alphabets_data.json',model_pred_path = 'models/stacked-lstm-new_predict.h5',model_train_path = 'models/stacked-lstm-new_train.h5'):
         try:
             self.alphabets_path = alphabets_path
             self.model_train_path = model_train_path
@@ -42,9 +42,10 @@ class ModelInference:
             logger.exception('Failed to Load alphabets data.')
         
         try:
-            model_train = tf.keras.models.load_model(self.model_train_path,custom_objects={'CTCLossLayer':CTCLossLayer})
+            # model_train = tf.keras.models.load_model(self.model_train_path,custom_objects={'CTCLossLayer':CTCLossLayer})
             self.model_pred = tf.keras.models.load_model(self.model_pred_path)
-            self.model_pred.set_weights(model_train.get_weights())
+            # self.model_pred.set_weights(model_train.get_weights())
+            self.model_pred.compile(tf.keras.optimizers.Adam(0.001))
             logger.info('Successfully Loaded Model for inference.')
         except Exception as e:
             logger.exception('Failed to Load Model for inference.')
