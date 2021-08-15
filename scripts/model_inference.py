@@ -42,9 +42,7 @@ class ModelInference:
             logger.exception('Failed to Load alphabets data.')
         
         try:
-            # model_train = tf.keras.models.load_model(self.model_train_path,custom_objects={'CTCLossLayer':CTCLossLayer})
             self.model_pred = tf.keras.models.load_model(self.model_pred_path)
-            # self.model_pred.set_weights(model_train.get_weights())
             self.model_pred.compile(tf.keras.optimizers.Adam(0.001))
             logger.info('Successfully Loaded Model for inference.')
         except Exception as e:
@@ -57,7 +55,6 @@ class ModelInference:
             input_val = (input_val - np.mean(input_val)) / np.std(input_val)
             # transform in 3d array
             train_input = tf.ragged.constant([input_val], dtype=np.float32)
-            # train_input = tf.expand_dims(train_input, axis=0)
             self.train_seq_len = tf.cast(train_input.row_lengths(), tf.int32)
             self.train_input = train_input.to_tensor(
                     default_value=self.FEAT_MASK_VALUE)
