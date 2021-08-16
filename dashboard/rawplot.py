@@ -8,6 +8,8 @@ import sys
 sys.path.insert(0,"../scripts")
 from matplotlib import pyplot as plt
 from audio_explorer import AudioExplorer
+from PIL import Image
+image = Image.open("../dashboard/8.png")
 
 def write():
     """Used to write the page in the app.py file"""
@@ -24,6 +26,8 @@ def write():
     elif data== "Channel": 
         y=train_info_df.Channel.value_counts()
         st.bar_chart(y)
+    
     elif data== 'Audio_duration ':
-      
-        train_audio_explorer.get_audio_visualization(966)
+        st.image(image, width=1500)  
+       
+        

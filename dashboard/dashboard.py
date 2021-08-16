@@ -3,10 +3,10 @@ import awesome_streamlit as ast
 import home
 import data1 
 import rawplot
-import pred
-import postplots
-import insights
 import uploader
+from PIL import Image
+image = Image.open("../dashboard/speech.png")
+
 ast.core.services.other.set_logging_format()
 
 # create the pages
@@ -14,9 +14,7 @@ PAGES = {
     "Home":home,
     "Raw Data":data1,
     "Raw Data visualisations":rawplot,
-    "Run Predictions":pred,
-    "Predicted data +  visualisations":postplots,
-    "Insights":insights,
+   
     "File uploader": uploader
 }
 
@@ -25,6 +23,9 @@ def main():
     """Main function of the App"""
     st.sidebar.title("Navigation")
     selection = st.sidebar.radio("Go to", list(PAGES.keys()))
+    st.sidebar.image("../dashboard/speech.png", use_column_width=True)
+
+
 
     page = PAGES[selection]
 
@@ -41,4 +42,3 @@ def main():
 # run it
 if __name__ == "__main__":
     main()
-    

@@ -85,7 +85,7 @@ def write():
         
             
             
-        with open(os.path.join("../data/tempfile",file.name),"wb") as f:
+        with open(os.path.join("../tempfile",file.name),"wb") as f:
             f.write(file.getbuffer())
         st.success("Processing File..")     
         
