@@ -1,5 +1,5 @@
 import streamlit as st
-import pandas as pd 
+import pandas as pd
 import awesome_streamlit as ast
 
 
@@ -7,7 +7,8 @@ import awesome_streamlit as ast
 def write():
     """Used to write the page in the app.py file"""
     with st.spinner("Loading Data ..."):
-        ast.shared.components.title_awesome("Speech to text for Amharic language ")
+        ast.shared.components.title_awesome(
+            "Speech to text for Amharic language ")
         st.title('Data description')
         st.write("""
                  We used the Amharic reading speech collected for speech recognition purposes in the conventional ASR approaches , around 2 hour reading speech containing 1000 sentences was used.
@@ -16,7 +17,7 @@ def write():
                  22.5 bit sample size and a stereo channel.
 
         """)
-        na_value=['',' ','nan','Nan','NaN','na', '<Na>']
-        train = pd.read_csv('../data/train/trsTrain.txt', na_values=na_value)
-         # pd.read_csv('../data//store.csv', na_values=na_value)
+        na_value = ['', ' ', 'nan', 'Nan', 'NaN', 'na', '<Na>']
+        train = pd.read_csv('./data/train/trsTrain.txt', na_values=na_value)
+        # pd.read_csv('../data//store.csv', na_values=na_value)
         st.write(train.sample(50))

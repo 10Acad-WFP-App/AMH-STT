@@ -5,10 +5,12 @@ from typing import SupportsRound, Union
 import pandas as pd
 import streamlit as st
 import streamlit as st
-from transcribe import *
+from dashboard.transcribe import *
 import time
+
+
 def write():
-    
+
     STYLE = """
     <style>
     img {
@@ -19,16 +21,15 @@ def write():
 
     FILE_TYPES = ["csv", "py",  "wav"]
 
-
     class FileType(Enum):
         """Used to distinguish between file types"""
 
-    
         CSV = "csv"
         PYTHON = "Python"
-        SOUND= "Voice"
+        SOUND = "Voice"
 
     st.title('SPEECH TO TEXT FOR AMHARIC')
+
     def get_file_type(file: Union[BytesIO, StringIO]) -> FileType:
         """The file uploader widget does not provide information on the type of file uploaded so we have
         to guess using rules or ML. See
@@ -52,54 +53,48 @@ def write():
             or "print(" in content
         ):
             return FileType.PYTHON
-        
 
         return FileType.CSV
 
-
     def main():
         """Run this function to display the Streamlit app"""
-        st.info("This webpage lets you upload wav audio file and transribe it to Amharic, CHECK THAT OUT !!")
+        st.info(
+            "This webpage lets you upload wav audio file and transribe it to Amharic, CHECK THAT OUT !!")
         st.markdown(STYLE, unsafe_allow_html=True)
         st.header("Upload audio file")
         file = st.file_uploader("Audio file", type=FILE_TYPES)
         show_file = st.empty()
         if not file:
-            show_file.info("Please upload a file of type: " + ", ".join(FILE_TYPES))
+            show_file.info("Please upload a file of type: " +
+                           ", ".join(FILE_TYPES))
             return
-        
-       
 
         file_type = get_file_type(file)
         if file_type == FileType.PYTHON:
             st.code(file.getvalue())
-            
+
         elif file_type == FileType.SOUND:
-            #st.code(file.getvalue())
+            # st.code(file.getvalue())
             audio_bytes = file.read()
             st.audio(audio_bytes,  format="audio/ogg")
 
         else:
             data = pd.read_csv(file)
             st.dataframe(data.head(10))
-        
-            
-            
-        with open(os.path.join("../tempfile",file.name),"wb") as f:
+
+        with open(os.path.join("./tempfile", file.name), "wb") as f:
             f.write(file.getbuffer())
-        st.success("Processing File..")     
-        
+        st.success("Processing File..")
+
         st.header("Transcribe audio")
         if st.button('Transcribe'):
             st.write("")
             with st.spinner('wait for it ...'):
                 time.sleep(60)
-            st.success('Done!')    
+            st.success('Done!')
         else:
-            st.write('')    
-        
-       
-        
+            st.write('')
+
         # if file:
         #     token, t_id = upload_file(file)
         #     result = {}
@@ -126,9 +121,8 @@ def write():
 
         #     st.balloons()
         #     st.header("Transcribed Text")
-        #     st.subheader(result['text'])    
+        #     st.subheader(result['text'])
 
         file.close()
-
 
     main()

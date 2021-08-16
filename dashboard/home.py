@@ -20,6 +20,4 @@ def write():
             with speech to text capabilities for Amharic language. 
                 """
         )
-        st.image("../dashboard/speech.png", use_column_width=True)
-
-        
+        st.image("./dashboard/speech.png", use_column_width=True)
