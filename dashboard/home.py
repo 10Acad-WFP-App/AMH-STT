@@ -10,7 +10,7 @@ import awesome_streamlit as ast
 def write():
     """Used to write the page in the app.py file"""
     with st.spinner("Loading Home ..."):
-        # ast.shared.components.title_awesome("Rossmann Pharmaceuticals 💊🩸🩺🩹💉 ")
+       
         st.title('Amharic speech to text')
         st.write(
             """
