@@ -11,3 +11,4 @@ mlflow==1.19.0
 muda==0.4.1
 jams==0.3.4
 jiwer==2.2.0
+seaborn==0.11.1
